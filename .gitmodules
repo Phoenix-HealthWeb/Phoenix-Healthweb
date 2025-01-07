@@ -1,6 +1,8 @@
 [submodule "NDB-REST-API"]
 	path = NDB-REST-API
 	url = git@github.com:Phoenix-HealthWeb/NDB-REST-API.git
+	branch = main
 [submodule "Local-Hospital-Service"]
 	path = Local-Hospital-Service
 	url = git@github.com:Phoenix-HealthWeb/Local-Hospital-Service.git
+	branch = main
