@@ -18,7 +18,7 @@ The chosen architecture style is the microservices, that allows the decoupling o
 
 # Architecture Overview
 
-![Architecture Overview.drawio.png](Phoenix%20Final%20report%201748046fbba78056a776c48d01651f5c/Architecture_Overview.drawio.png)
+![Architecture Overview.drawio.png](docs/Architecture_Overview.drawio.png)
 
 Each hospital needs to implement a Local Hospital Service. This solution is easy to deploy for a technician because it just need to use docker to get it up and running.
 
@@ -61,22 +61,22 @@ To manage the queue system, our application has a few components, defined as Eli
 - `NdbSynchronization.Producer` The simplest one, is responsible for writing any generic message on the synchronization queue. It is used by other components to initiate the synchronization of all the above mentioned resources
 - `NdbSynchronization.Consumer` This component has the role of reading from the queue. What it does is distinguishing the resource type represented in the current message, and dispatching it to the API management module:
     
-    ![image.png](Phoenix%20Final%20report%201748046fbba78056a776c48d01651f5c/image.png)
+    ![image.png](docs/image.png)
     
     If the synchronization to the API succeeds, the current message is **ack-ed** to Rabbit, and the next message will be processed. Otherwise, if the connection is refused due to connection issues (**:econnrefused** error), the message is rejected and requeued, so that the synchronization could be retried later. The last case is that some other error is thrown in any step of the processing pipeline. In this case, the message will be rejected and sent to the deadletter queue:
     
-    ![image.png](Phoenix%20Final%20report%201748046fbba78056a776c48d01651f5c/image%201.png)
+    ![image.png](docs/image%201.png)
     
 - `NdbSynchronization.Supervisor` This is another component that is responsible of spawning and handling the lifecycle of the Producer and Consumer. This leverages a pattern heavily used in Elixir applications called **Supervisor trees**. A running Elixir application, in fact, is not composed by a single process, but rather it is defined by a root Task, called **Application**, that spawns a certain number of child Tasks (even [millions](https://www.phoenixframework.org/blog/the-road-to-2-million-websocket-connections)). Each Task can recursively spawn other Tasks, in which has c-ontrol over their lifecycle and can communicate via message passing. For any Task, its parent is defined as its Supervisor. The following is a subset of the Supervisor tree of our application. Notice the tree dedicated to the data synchronization:
     
-    ![image.png](Phoenix%20Final%20report%201748046fbba78056a776c48d01651f5c/image%202.png)
+    ![image.png](docs/image%202.png)
     
     The `NdbSynchronization.Supervisor` is also responsible for declaring the queues on Rabbit, opening a connection, and restarting the children in case they terminate unexpectedly
     
 
 The event-driven architecture responsible for the data synchronization can then be represented as the following diagram:
 
-![image.png](Phoenix%20Final%20report%201748046fbba78056a776c48d01651f5c/image%203.png)
+![image.png](docs/image%203.png)
 
 ## Authentication
 
@@ -137,15 +137,15 @@ The administrators have the ability to manage hospitals and practitioners. They 
 
 In practice they have a dashboard in which they can access all those different fields.
 
-![image.png](Phoenix%20Final%20report%201748046fbba78056a776c48d01651f5c/image%204.png)
+![image.png](docs/image%204.png)
 
-![image.png](Phoenix%20Final%20report%201748046fbba78056a776c48d01651f5c/image%205.png)
+![image.png](docs/image%205.png)
 
-![image.png](Phoenix%20Final%20report%201748046fbba78056a776c48d01651f5c/image%206.png)
+![image.png](docs/image%206.png)
 
-![image.png](Phoenix%20Final%20report%201748046fbba78056a776c48d01651f5c/image%207.png)
+![image.png](docs/image%207.png)
 
-![image.png](Phoenix%20Final%20report%201748046fbba78056a776c48d01651f5c/image%208.png)
+![image.png](docs/image%208.png)
 
 Administrators have access to these views using the same technologies as the one described for the implementation of the local hospital service.
 
@@ -157,7 +157,7 @@ The local hospital service have access to the REST API that allows practitioners
 
 These are the endpoints defined in the “router” module:
 
-![image.png](Phoenix%20Final%20report%201748046fbba78056a776c48d01651f5c/image%209.png)
+![image.png](docs/image%209.png)
 
 The endpoints marked with “resources” are the ones that supports all CRUD operations. The endpoints marked with “get” only support the HTTP GET operation.
 
@@ -182,7 +182,7 @@ Once the development of a new feature is completed and tested inside the **dev b
 
 ## Kubernetes cluster architecture
 
-![k8s-cluster.drawio.png](Phoenix%20Final%20report%201748046fbba78056a776c48d01651f5c/k8s-cluster.drawio.png)
+![k8s-cluster.drawio.png](docs/k8s-cluster.drawio.png)
 
 ## Kubernetes deployment
 
@@ -197,11 +197,11 @@ This technology is a crucial component of the system. It allows to:
 - **NGINX reverse proxy**: It’s an essential component and acts as an entry point to the service’s load balancer, and exposes it to external requests. It also adds a layer of security and it could be used as a filter, if needed.
 - **Monitor the system’s performance** and configuration very efficiently through the Kubernetes dashboard. Here are some examples.
 
-![Screenshot 2025-01-07 at 19.36.54.png](Phoenix%20Final%20report%201748046fbba78056a776c48d01651f5c/Screenshot_2025-01-07_at_19.36.54.png)
+![Screenshot 2025-01-07 at 19.36.54.png](docs/Screenshot_2025-01-07_at_19.36.54.png)
 
-![Screenshot 2025-01-07 at 19.35.33.png](Phoenix%20Final%20report%201748046fbba78056a776c48d01651f5c/Screenshot_2025-01-07_at_19.35.33.png)
+![Screenshot 2025-01-07 at 19.35.33.png](docs/Screenshot_2025-01-07_at_19.35.33.png)
 
-![Screenshot 2025-01-07 at 19.35.56.png](Phoenix%20Final%20report%201748046fbba78056a776c48d01651f5c/Screenshot_2025-01-07_at_19.35.56.png)
+![Screenshot 2025-01-07 at 19.35.56.png](docs/Screenshot_2025-01-07_at_19.35.56.png)
 
 To run the Kubernetes Cluster, it is necessary to follow these steps:
 
