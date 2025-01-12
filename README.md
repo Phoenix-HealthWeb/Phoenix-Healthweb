@@ -1,5 +1,12 @@
 # Phoenix Final report
 
+# Team members - Phoenix HealthWeb
+- Alberto Spaziani 904329 [@Space99s](https://github.com/Space99s)
+- Alessandro Liberalato 908093 [@retrolimber2024](https://github.com/retrolimber2024)
+- Andrea Roveroni 880092 [@roveroniandrea](https://github.com/roveroniandrea)
+- Francesco Forcellato 875290 [@forcellatofrancesco](https://github.com/forcellatofrancesco)
+- Pietro Visconti 885448 [@Visco01](https://github.com/Visco01)
+
 # Project Setup
 
 1. Clone the repository with submodules:
