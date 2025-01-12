@@ -14,7 +14,7 @@
 # Introduction
 
 In the following documentation we will describe the architecture of our application, that aims to implement a service for a national-level healthcare system.
-The chosen architecture style is the microservices, that allows the decoupling of each structural base component from the others, ensuring modularity, and also scalability.
+The chosen architecture style is microservices, that allows the decoupling of each structural base component from the others, ensuring modularity, and also scalability.
 
 # Architecture Overview
 
