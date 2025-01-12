@@ -8,8 +8,8 @@
     git clone --recurse-submodules https://github.com/Phoenix-HealthWeb/Phoenix-Healthweb
     ```
     
-2. [Run the National Database API](https://www.notion.so/Phoenix-Final-report-1748046fbba78056a776c48d01651f5c?pvs=21)
-3. [Run the Local Hospital instance](https://www.notion.so/Phoenix-Final-report-1748046fbba78056a776c48d01651f5c?pvs=21)
+2. [Run the National Database API](#ndb-national-database-api)
+3. [Run the Local Hospital instance](#running-the-local-hospital-instance)
 
 # Introduction (overall architecture microservices)
 
