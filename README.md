@@ -11,7 +11,7 @@
 2. [Run the National Database API](https://www.notion.so/Phoenix-Final-report-1748046fbba78056a776c48d01651f5c?pvs=21)
 3. [Run the Local Hospital instance](https://www.notion.so/Phoenix-Final-report-1748046fbba78056a776c48d01651f5c?pvs=21)
 
-# Introduction (overall architecture microservices)
+# Introduction
 
 In the following documentation we will describe the architecture of our application, that aims to implement a service for a national-level healthcare system.
 The chosen architecture style is the microservices, that allows the decoupling of each structural base component from the others, ensuring modularity, and also scalability.
