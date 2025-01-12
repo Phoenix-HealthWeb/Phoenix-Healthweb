@@ -11,10 +11,10 @@
 2. [Run the National Database API](https://www.notion.so/Phoenix-Final-report-1748046fbba78056a776c48d01651f5c?pvs=21)
 3. [Run the Local Hospital instance](https://www.notion.so/Phoenix-Final-report-1748046fbba78056a776c48d01651f5c?pvs=21)
 
-# Introduction
+# Introduction (overall architecture microservices)
 
 In the following documentation we will describe the architecture of our application, that aims to implement a service for a national-level healthcare system.
-The chosen architecture style is microservices, that allows the decoupling of each structural base component from the others, ensuring modularity, and also scalability.
+The chosen architecture style is the microservices, that allows the decoupling of each structural base component from the others, ensuring modularity, and also scalability.
 
 # Architecture Overview
 
@@ -69,14 +69,14 @@ To manage the queue system, our application has a few components, defined as Eli
     
 - `NdbSynchronization.Supervisor` This is another component that is responsible of spawning and handling the lifecycle of the Producer and Consumer. This leverages a pattern heavily used in Elixir applications called **Supervisor trees**. A running Elixir application, in fact, is not composed by a single process, but rather it is defined by a root Task, called **Application**, that spawns a certain number of child Tasks (even [millions](https://www.phoenixframework.org/blog/the-road-to-2-million-websocket-connections)). Each Task can recursively spawn other Tasks, in which has c-ontrol over their lifecycle and can communicate via message passing. For any Task, its parent is defined as its Supervisor. The following is a subset of the Supervisor tree of our application. Notice the tree dedicated to the data synchronization:
     
-    ![image.png](docs/image%202.png)
+    ![supervisor-trees.drawio.png](docs/supervisor-trees.drawio.png)
     
     The `NdbSynchronization.Supervisor` is also responsible for declaring the queues on Rabbit, opening a connection, and restarting the children in case they terminate unexpectedly
     
 
 The event-driven architecture responsible for the data synchronization can then be represented as the following diagram:
 
-![image.png](docs/image%203.png)
+![full-diagram.drawio.png](docs/full-diagram.drawio.png)
 
 ## Authentication
 
@@ -101,6 +101,16 @@ This system has been developed taking in consideration security and usability.
 1. A local hospital can not be accessed from outside the hospital.
 2. The national database can be accessed only by administrators and local hospital services.
 3. Practitioners don’t have to create or memorize passwords. The “magic link” acts like an OTP, since it is unique and usable only once. Since a practitioner probably has an institutional email, we rely on third party security for the authenticity of the address.
+
+## Database
+
+The local database has the following structure:
+
+![image.png](docs/image%202.png)
+
+Patients are stored locally to have a faster access to their most relevant data. Encounters are used to assign to each patient arriving at the hospital a priority code (for instance: white, green, red, …). The doctors assigned to a specific ward can then call the patient with the highest priority. They can then create an observation and send it to the national database.
+
+The table `users_tokens` is used for the “magic link” mechanism, in order to authenticate practitioners.
 
 ## Running the Local Hospital Instance
 
@@ -137,6 +147,8 @@ The administrators have the ability to manage hospitals and practitioners. They 
 
 In practice they have a dashboard in which they can access all those different fields.
 
+![image.png](docs/image%203.png)
+
 ![image.png](docs/image%204.png)
 
 ![image.png](docs/image%205.png)
@@ -144,8 +156,6 @@ In practice they have a dashboard in which they can access all those different f
 ![image.png](docs/image%206.png)
 
 ![image.png](docs/image%207.png)
-
-![image.png](docs/image%208.png)
 
 Administrators have access to these views using the same technologies as the one described for the implementation of the local hospital service.
 
@@ -157,7 +167,7 @@ The local hospital service have access to the REST API that allows practitioners
 
 These are the endpoints defined in the “router” module:
 
-![image.png](docs/image%209.png)
+![image.png](docs/image%208.png)
 
 The endpoints marked with “resources” are the ones that supports all CRUD operations. The endpoints marked with “get” only support the HTTP GET operation.
 
@@ -171,6 +181,16 @@ mix phx.gen.json <data> --web api --no-context --no-schema
 ```
 
 With the first command, Phoenix framework automatically generated all the boilerplate code for the DB interactions and the views. The second command has been used to generate the REST API code used for CRUD operations.
+
+### Database
+
+The database has the following structure:
+
+![image.png](docs/image%209.png)
+
+Notice that in the national database there is no need to store wards, because the ward name will be put inside the observations. This is done to allow each hospital to manage its wards.
+
+Encounters are also a local hospital service concept. This is because they are used to implement patients queuing and the national database does not need to have an additional overhead for dealing with all the encounters and the priorities.
 
 ## Docker image Continuous Integration
 
