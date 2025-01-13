@@ -15,7 +15,7 @@
     git clone --recurse-submodules https://github.com/Phoenix-HealthWeb/Phoenix-Healthweb
     ```
     
-2. [Run the National Database API](#ndb-national-database-api)
+2. [Run the National Database API](#Kubernetes-deployment)
 3. [Run the Local Hospital instance](#running-the-local-hospital-instance)
 
 # Introduction (overall architecture microservices)
@@ -128,6 +128,8 @@ The Local hospital instance is composed of two different Docker containers:
 
 Before running with Docker compose, please create a `.env` file in the same folder as `local_hospital_service\.env.example` . This is used to safely store environment variables without committing them to Git.
 
+**NOTE:** To ease the demo of the application we have pre-configured the `.env.example` file with the correct values for each env variable. It is sufficient to just copy the file content into `.env`. For the local instance to correctly authenticate with the API, please also follow the [Authentication steps](#Authentication) defined above to generate a new Hospital with its key, and set the `NDB_API_KEY` and `NDB_API_HOSPITAL_ID` env variables accordingly.
+
 To run the instance, head to the `Local-Hospital-Service\local_hospital_service\docker-compose.yml` file. This is the docker compose definition for the instance. Run with the following command:
 
 ```bash
@@ -234,6 +236,9 @@ To run the Kubernetes Cluster, it is necessary to follow these steps:
 
 - Install Docker and Minikube
 - Pull the **NDB-REST-API** project, and create a new the **.env** file in the ndb-rest-api folder with the form specified in **ndb-rest-api/.env.example**
+
+    **NOTE:** To ease the demo of the application we have pre-configured the `.env.example` file with the correct values for each env variable. It is sufficient to just copy the file content into `.env`.
+
 - Add **127.0.0.1 [ndb-api.com](http://ndb-api.com/)** to your **/etc/hosts** file in order to access to the service from your browser when the deployment is up and running
 - Head to the **k8s** folder (you must launch the scripts from this location)
 - Run the following commands:
